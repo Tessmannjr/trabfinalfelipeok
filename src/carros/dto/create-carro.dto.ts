@@ -1,4 +1,4 @@
-import { ArrayUnique, IsArray, IsNumber, IsOptional } from "class-validator";
+import { ArrayUnique, IsArray, isNumber, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class CreateCarroDto {
     @IsNumber()
@@ -8,4 +8,22 @@ export class CreateCarroDto {
     @ArrayUnique()
     @IsOptional()
     concessionariaIds: number[];
+
+    @IsString()
+    modelo: string
+
+    @IsString()
+    marca: string
+
+    @IsNumber()
+    ano: number
+
+    @IsString()
+    cor: string
+
+    @IsNumber()
+    preco: number
+
+   @IsNumber()
+    vendedorId: number
 }

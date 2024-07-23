@@ -3,7 +3,7 @@ import { AuthService } from "./auth.service";
 import { AuthLoginDTO } from "./dto/auth-login.dto";
 import { AuthRegistroDTO } from "./dto/auth-registro.dto";
 import { AuthGuard } from "src/guards/auth.guard";
-import { Cliente } from "src/decorators/cliente.decorator";
+import { Usuario } from "src/decorators/usuario.decorator";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { writeFile } from "fs/promises";
 import { join, extname } from 'path';
@@ -28,7 +28,7 @@ export class AuthController {
 
     @UseGuards(AuthGuard)
     @Post('me')
-    async me(@Cliente() user){
+    async me(@Usuario() user){
         return {user};
     }
 
@@ -36,7 +36,7 @@ export class AuthController {
     @UseGuards(AuthGuard)
     @Post('file')
     async file(
-        @Cliente() user, 
+        @Usuario() user, 
         @UploadedFile(new ParseFilePipe({
             validators: [
                 new FileTypeValidator({fileType: 'image/jpeg'}),

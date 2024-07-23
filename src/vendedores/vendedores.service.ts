@@ -4,7 +4,7 @@ import { UpdateVendedorDto } from './dto/update-vendedor.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Vendedor } from './entities/vendedor.entity';
 import { Repository } from 'typeorm';
-import { Cliente } from 'src/clientes/entities/cliente.entity';
+import { Usuario } from 'src/usuario/entities/usuario.entity';
 
 @Injectable()
 export class VendedoresService {
@@ -12,18 +12,18 @@ export class VendedoresService {
     constructor(
         @InjectRepository(Vendedor)
         private vendedorRepository: Repository<Vendedor>,
-        @InjectRepository(Cliente)
-        private clienteRepository: Repository<Cliente>
+        @InjectRepository(Usuario)
+        private usuarioRepository: Repository<Usuario>
     ) { }
 
     async create(createVendedorDto: CreateVendedorDto) {
-        const cliente = await this.clienteRepository.findOneBy({ id: createVendedorDto.clienteId });
-        if (!cliente) {
+        const usuario = await this.usuarioRepository.findOneBy({ id: createVendedorDto.usuarioId });
+        if (!usuario) {
             throw new Error('Usuário não encontrado');
         }
 
         const vendedor = this.vendedorRepository.create({
-            cliente
+            usuario
         });
 
         return this.vendedorRepository.save(vendedor);
@@ -31,14 +31,14 @@ export class VendedoresService {
 
     findAll() {
         return this.vendedorRepository.find({
-            relations: ['cliente', 'turmas']
+            relations: ['usuario', 'turmas']
         });
     }
 
     async findOne(id: number) {
         const vendedor = await this.vendedorRepository.findOne({
             where: { id },
-            relations: ['cliente', 'turmas']
+            relations: ['usuario', 'turmas']
         });
 
         if (!vendedor) {
@@ -50,12 +50,12 @@ export class VendedoresService {
 
     async update(id: number, updateVendedorDto: UpdateVendedorDto) {
         const vendedor = await this.findOne(id);
-        if (updateVendedorDto.clienteId) {
-            const cliente = await this.clienteRepository.findOneBy({ id: updateVendedorDto.clienteId });
-            if (!cliente) {
+        if (updateVendedorDto.usuarioId) {
+            const usuario = await this.usuarioRepository.findOneBy({ id: updateVendedorDto.usuarioId });
+            if (!usuario) {
                 throw new Error('Usuário não encontrado');
             }
-            vendedor.cliente = cliente;
+            vendedor.usuario = usuario;
         }
         return this.vendedorRepository.save(vendedor);
     }

@@ -1,12 +1,12 @@
 import { Module, forwardRef } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UsuarioModule } from './clientes/clientes.module';
+import { UsuarioModule } from './usuario/usuario.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { config } from './database.providers';
-import { ProfessorModule } from './vendedores/vendedores.module';
-import { AlunoModule } from './carros/carros.module';
-import { TurmaModule } from './concessionarias/concessionarias.module';
+import { VendedorModule } from './vendedores/vendedores.module';
+import { CarroModule } from './carros/carros.module';
+import { ConcessionariaModule } from './concessionarias/concessionarias.module';
 import { AuthModule } from './auth/auth.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter'
@@ -14,9 +14,9 @@ import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter'
 @Module({
   imports: [
     UsuarioModule, 
-    ProfessorModule, 
-    AlunoModule,
-    TurmaModule,
+    VendedorModule, 
+    CarroModule,
+    ConcessionariaModule,
     forwardRef(() => AuthModule), 
     TypeOrmModule.forRoot(config),
     MailerModule.forRoot({
@@ -29,7 +29,7 @@ import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter'
         }
       },
       defaults: {
-        from: '"Aula Senac" <alfred.little6@ethereal.email>'
+        from: '"Revenda" <alfred.little6@ethereal.email>'
       },
       template: {
         dir: __dirname + '/templates',

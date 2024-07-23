@@ -1,13 +1,13 @@
 import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
 import { AuthService } from "src/auth/auth.service";
-import { ClienteService } from "src/clientes/clientes.service";
+import { UsuarioService } from "src/usuario/usuario.service";
 
 @Injectable()
 export class AuthGuard implements CanActivate {
 
     constructor(
         private readonly authService: AuthService,
-        private readonly clienteService: ClienteService 
+        private readonly usuarioService: UsuarioService 
     ){}
     
     async canActivate(context: ExecutionContext) {
@@ -16,7 +16,7 @@ export class AuthGuard implements CanActivate {
         try {
             const data = this.authService.checkToken((authorization ?? '').split(' ')[1])
             request.tokenPayload = data;
-            request.user = await this.clienteService.listarUm(data.id)
+            request.user = await this.usuarioService.listarUm(data.id)
             return true;
         } catch (e) {
             return false;

@@ -24,7 +24,7 @@ export class ConcessionariaService {
 
     let vendedor = null;
     if (createConcessionariaDto.vendedorId){
-      vendedor = await this.vendedorRepository.findOne({id: createConcessionariaDto.vendedorId})
+      vendedor = await this.vendedorRepository.findOne({ where: { id: createConcessionariaDto.vendedorId } });
       if(!vendedor) {
         throw new Error('Vendedor não encontrado')
       }
@@ -65,7 +65,11 @@ export class ConcessionariaService {
     }
 
     if(updateConcessionariaDto.vendedorId){
-      const vendedor = await this.vendedorRepository.findOne({id: updateConcessionariaDto.vendedorId})
+      const vendedor = await this.vendedorRepository.findOne({
+        where: {
+          id: updateConcessionariaDto.vendedorId
+        }
+      });
       if(!vendedor) {
         throw new Error('Vendedor não encontrado')
       }

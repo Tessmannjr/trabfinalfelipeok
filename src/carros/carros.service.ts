@@ -4,7 +4,7 @@ import { UpdateCarroDto } from './dto/update-carro.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { Carro } from './entities/carro.entity';
-import { Usuario } from 'src/usuario/entities/usuario.entity'; 
+import { Usuario } from 'src/usuario/entities/usuario.entity';
 import { Concessionaria } from 'src/concessionarias/entities/concessionaria.entity';
 
 @Injectable()
@@ -25,7 +25,7 @@ export class CarrosService {
     }
 
     const carro = this.carroRepository.create({
-      usuario: usuario,
+      vendedor: usuario,
       concessionarias: [],
     });
 
@@ -60,12 +60,16 @@ export class CarrosService {
   async update(id: number, updateCarroDto: UpdateCarroDto) {
   const carro = await this.findOne(id);
   
-  if (updateCarroDto.usuarioId) {
-    const usuario = await this.usuarioRepository.findOne(updateCarroDto.usuarioId);
+  if (updateCarroDto.vendedorId) {
+    const usuario = await this.usuarioRepository.findOne({
+      where: {
+        id: updateCarroDto.vendedorId
+      }
+    });
     if (!usuario) {
       throw new NotFoundException('Usuário não encontrado');
     }
-    carro.usuario = usuario;
+    carro.vendedor = usuario;
   }
 
   if (updateCarroDto.concessionariaIds && updateCarroDto.concessionariaIds.length > 0) {
@@ -77,5 +81,17 @@ export class CarrosService {
     carro.concessionarias = concessionarias;
   }
 
+  const usuario = await this.usuarioRepository.findOne({
+    where: { id: updateCarroDto.usuarioId },
+  });
+
   return this.carroRepository.save(carro);
+}
+async remove(id: number) {
+  const carro = await this.carroRepository.findOne({ where: { id } });
+  if (!carro) {
+    throw new NotFoundException(`Carro com ID ${id} não encontrado`);
+  }
+  return this.carroRepository.remove(carro);
+}
 }
